@@ -10,5 +10,3 @@
 2022/03/23 19:15:20 emse/fayol/4ET/411/TEMP/outside 13.36
 2022/03/23 19:15:20 emse/fayol/4ET/414/TEMP/outside 13.36
 2022/03/23 19:15:20 emse/fayol/4ET/418/TEMP/outside 13.36
-
-
