@@ -7,7 +7,7 @@
 int main(int argc, char **argv)
 {
     char* filepath = malloc(50*sizeof(char));
-    filepath = "data/observations.txt";
+    filepath = "data/observations_externes.txt";
 
     // Storage of all observations in a LinkedList
     LinkedList* l = readFromFile(filepath);

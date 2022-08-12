@@ -1,12 +1,14 @@
-2022/03/23 19:15:20 emse/fayol/3ET/325/temperature/outside 13.36
-2022/03/23 19:15:20 emse/fayol/3ET/328/temperature/outside 13.36
-2022/03/23 19:15:20 emse/fayol/3ET/332/temperature/outside 13.36
-2022/03/23 19:15:20 emse/fayol/4ET/400/temperature/outside 13.36
-2022/03/23 19:15:20 emse/fayol/4ET/401H/temperature/outside 13.36
-2022/03/23 19:15:20 emse/fayol/4ET/404/temperature/outside 13.36
-2022/03/23 19:15:20 emse/fayol/4ET/406/temperature/outside 13.36
-2022/03/23 19:15:20 emse/fayol/4ET/407/temperature/outside 13.36
-2022/03/23 19:15:20 emse/fayol/4ET/409/temperature/outside 13.36
-2022/03/23 19:15:20 emse/fayol/4ET/411/temperature/outside 13.36
-2022/03/23 19:15:20 emse/fayol/4ET/414/temperature/outside 13.36
-2022/03/23 19:15:20 emse/fayol/4ET/418/temperature/outside 13.36
+2022/03/23 19:15:20 emse/fayol/3ET/325/TEMP/outside 13.36
+2022/03/23 19:15:20 emse/fayol/3ET/328/TEMP/outside 13.36
+2022/03/23 19:15:20 emse/fayol/3ET/332/TEMP/outside 13.36
+2022/03/23 19:15:20 emse/fayol/4ET/400/HMDT/outside 13.36
+2022/03/23 19:15:20 emse/fayol/4ET/401H/TEMP/outside 13.36
+2022/03/23 19:15:20 emse/fayol/4ET/404/TEMP/outside 13.36
+2022/03/23 19:15:20 emse/fayol/4ET/406/LUMI/outside 13.36
+2022/03/23 19:15:20 emse/fayol/4ET/407/HMDT/outside 13.36
+2022/03/23 19:15:20 emse/fayol/4ET/409/TEMP/outside 13.36
+2022/03/23 19:15:20 emse/fayol/4ET/411/TEMP/outside 13.36
+2022/03/23 19:15:20 emse/fayol/4ET/414/TEMP/outside 13.36
+2022/03/23 19:15:20 emse/fayol/4ET/418/TEMP/outside 13.36
+
+

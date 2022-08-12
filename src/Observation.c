@@ -46,7 +46,7 @@ Observation* readFromStream(char* stream)
 {
     // 2022/03/23 19:14:16 emse/fayol/e4/S405/sensors/6bd134b6-339c-4168-9aeb-ae7d0f236851/metrics/LUMI 3
     // ------------------------------------------------OR--------------------------------------------------
-    // 2022/03/23 19:15:20 emse/fayol/3ET/325/temperature/outside 13.36
+    // 2022/03/23 19:15:20 emse/fayol/3ET/325/TEMP/outside 13.36
 
     // Verify is stream is an observation of an externe temperature
     char* resp = NULL;
@@ -147,20 +147,32 @@ Observation* readFromStream(char* stream)
    {
        if(strcmp(matObser[13], "LUMI") == 0)
        {
-            //sensorType = Luminosity;
             (* sensorTypePointer) = Luminosity;
        }
        else if (strcmp(matObser[13], "TEMP") == 0)
        {
-            //sensorType = Temperature;
             (* sensorTypePointer) = Temperature;
        }
        else if (strcmp(matObser[13], "HMDT") == 0)
        {
-            //sensorType = Humidity;
             (* sensorTypePointer) = Humidity;
        }
 
+   }
+   else
+   {
+       if(strcmp(matObser[10], "LUMI") == 0)
+       {
+            (* sensorTypePointer) = Luminosity;
+       }
+       else if (strcmp(matObser[10], "TEMP") == 0)
+       {
+            (* sensorTypePointer) = Temperature;
+       }
+       else if (strcmp(matObser[10], "HMDT") == 0)
+       {
+            (* sensorTypePointer) = Humidity;
+       }
    }
    
    // Attribute observedValue
@@ -184,17 +196,8 @@ Observation* readFromStream(char* stream)
    (*observation).stair = stair;
    (*observation).room = room;
    (*observation).sensorID = sensorID;
-   if(resp)
-   {
-       (*observation).sensorType = sensorTypePointer;
-   }
-   else
-   {
-       (*observation).sensorType = NULL;
-   }
-   
+   (*observation).sensorType = sensorTypePointer;
    (*observation).observedValue = observedValue;
-
 
    return observation;
 
@@ -223,24 +226,19 @@ void printObs(LinkedList* l)
             printf(" sensorID : %s\n", (*obs).sensorID);
         }
         
-
-        if (SensorTypePointer)
+        if(*SensorTypePointer == 0)
         {
-            if(*SensorTypePointer == 0)
-            {
-                printf(" sensorType : Luminosity \n");
-            }
-            else if (*SensorTypePointer == 1)
-            {
-                printf(" sensorType : Temperature \n");
-            }
-            else if (*SensorTypePointer == 2)
-            {
-                printf(" sensorType : Humidity \n");
-            }
-            
+            printf(" sensorType : Luminosity \n");
         }
-        
+        else if (*SensorTypePointer == 1)
+        {
+            printf(" sensorType : Temperature \n");
+        }
+        else if (*SensorTypePointer == 2)
+        {
+            printf(" sensorType : Humidity \n");
+        }
+            
         printf(" observedValue  : %f\n\n", (*obs).observedValue);
     }
 
