@@ -1,4 +1,4 @@
-MICROCONTROLER = Executable/Main
+MICROCONTROLER = executable/Main
 CC = clang
 CFLAGS= 
 LINKER = clang
