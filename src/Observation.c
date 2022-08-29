@@ -28,16 +28,22 @@ LinkedList* readFromFile(char* filepath)
                 {
                     obs = readFromStream(stream);
                     insertInLast(l ,obs);
+                   
                 }
             }
             
         }
 
         fclose(file);
+
+        //free the stream
+        free(stream);
+       
     }
     else
     {
         printf("Cannot open file");
+        free(stream);
     }
     return l;
 }
@@ -90,7 +96,7 @@ Observation* readFromStream(char* stream)
        for(j=i+1; j<=i+7;j++)
        {
             token = strtok(NULL, "/");
-            matObser[j] = malloc(strlen(token)* sizeof(char)) ; 
+            matObser[j] = malloc((strlen(token)+1)* sizeof(char)) ; 
             strcpy(matObser[j],token );
        }
    }
@@ -99,17 +105,17 @@ Observation* readFromStream(char* stream)
        for(j=i+1; j<=i+5;j++)
        {
             token = strtok(NULL, "/");
-            matObser[j] = malloc(strlen(token)* sizeof(char)) ; 
+            matObser[j] = malloc((strlen(token)+1)* sizeof(char)) ; 
             strcpy(matObser[j],token );
        }
    } 
    
    token = strtok(NULL, " ");
-   matObser[j] = malloc(strlen(token)* sizeof(char)) ; 
+   matObser[j] = malloc((strlen(token)+1)* sizeof(char)) ; 
    strcpy(matObser[j],token );
 
    token = strtok(NULL, " ");
-   matObser[j+1] = malloc(strlen(token)* sizeof(char)) ; 
+   matObser[j+1] = malloc((strlen(token)+1)* sizeof(char)) ; 
    strcpy(matObser[j+1],token );
 
    // Construction of a Date object 
@@ -125,7 +131,16 @@ Observation* readFromStream(char* stream)
    time.second = atoi(matObser[5]);
 
    // Attribute building
-   char* building = concatString(matObser[6], matObser[7]);
+   char* elem = malloc(1 * sizeof(char));
+   elem[0] = '_';
+   char* building = concatString(matObser[6], matObser[7], elem);
+
+        //free the two elements which contained the constitute elements of the building attribute
+        free(matObser[6]);
+        free(matObser[7]); 
+
+        //free the string "elem"
+        free(elem);
 
    // Attribute stair
    char* stair = matObser[8];
@@ -157,7 +172,7 @@ Observation* readFromStream(char* stream)
        {
             (* sensorTypePointer) = Humidity;
        }
-
+        free(matObser[13]);
    }
    else
    {
@@ -173,6 +188,7 @@ Observation* readFromStream(char* stream)
        {
             (* sensorTypePointer) = Humidity;
        }
+       free(matObser[10]);
    }
    
    // Attribute observedValue
@@ -180,10 +196,12 @@ Observation* readFromStream(char* stream)
    if(resp)
    {
        observedValue = atof(matObser[14]);
+       free(matObser[14]);
    }
    else
    {
        observedValue = atof(matObser[12]);
+       free(matObser[12]);
    } 
    
 
@@ -194,13 +212,22 @@ Observation* readFromStream(char* stream)
    (*observation).time = time;
    (*observation).building = building;
    (*observation).stair = stair;
-   (*observation).room = room;
+   (*observation).room = roomParse(room);
    (*observation).sensorID = sensorID;
    (*observation).sensorType = sensorTypePointer;
    (*observation).observedValue = observedValue;
 
    return observation;
 
+}
+
+void freeObservation(Observation* obs)
+{
+    free(obs->building);
+    free(obs->room);
+    free(obs->stair);
+    free(obs->sensorID);
+    free(obs->sensorType);
 }
 
 void printObs(LinkedList* l)
@@ -245,31 +272,417 @@ void printObs(LinkedList* l)
 }
 
 
-char* concatString(char* str1, char* str2)
+
+
+
+char* getSubject(Observation* obs)
 {
-    int lenStr1 = strlen(str1);
-    int lenStr2 = strlen(str2);
-    int lenResult = lenStr1 + lenStr2+1;
-    char* strResult = malloc(lenResult * sizeof(char));
+    //**http://example.org/id/observation/emse_fauriel_3ET_460_Humidity_2022-03-23T19:14:16
 
-    int i=0;
-    while (i<lenStr1)
+    char init[50] = "http://example.org/id/observation";
+    
+    char sensorType1[20] = "Luminosity";
+    char sensorType2[20] = "Temperature";
+    char sensorType3[20] = "Humidity";
+
+    char* elem = malloc(1 * sizeof(char));
+    char* res = calloc(70,sizeof(char));
+    char* buidingStairRoom = getAttr(obs);
+    char* dateTime = getTimesAttr(obs);
+    
+
+    elem[0] = '/';
+    res = concatString(init,buidingStairRoom,elem);
+
+    elem[0] = '_';
+    if( *(obs->sensorType) == 0 )
     {
-        strResult[i] = str1[i];
-        i++;
+        res = concatString(res,sensorType1,elem);
+    }
+    else if ( *(obs->sensorType) == 1 )
+    {
+        res = concatString(res,sensorType2,elem);
+    }
+    else if ( *(obs->sensorType) == 2 )
+    {
+        res = concatString(res,sensorType3,elem);
     }
 
-    strResult[i] = '_'; i = i+1;
+    elem[0] = '_';
+    res = concatString(res,dateTime,elem);
+    
+    return res;
+}
 
-    int j=0;
-    while (i<lenResult)
+char* getObject(Observation* obs, char* predicate)
+{
+    //  http://www.w3.org/1999/02/22-rdf-syntax-ns#type     **predicate for sensorType
+    //  objExple: https://coswot.gitlab.io/ontology#LuminosityObservation
+
+
+    //  http://www.w3.org/ns/sosa/observedProperty          **predicate for more information about sensortype
+    //  objExple: http://example.org/id/property/emse_fauriel_4ET_405_sample1_ambientTemperatureProperty
+
+
+    //  http://www.w3.org/ns/sosa/phenomenonTime            **predicate for date and time
+    //  objExple: http://example.org/id/instant/2022-03-23T19:14:16
+
+
+    //  http://www.w3.org/ns/sosa/resultTime                 **predicate for more information about date and Time
+    //  objExple:  "2022-03-23T19:14:16Z"^^xsd:dateTime 
+    
+
+    //  http://www.w3.org/ns/sosa/madeBySensor              **predicate for building, stair, room, sensorID and sensorType
+    //  objExple: http://example.org/id/sensor/emse_fauriel_4ET_405_6bd134b6-339c-4168-9aeb-ae7d0f236851_Humidity
+
+
+    //  http://www.w3.org/ns/sosa/hasSimpleResult           **predicate for observedValue 
+    //  objExple: “27.37”^^xsd:float
+
+    
+
+    char* object = NULL;
+
+    if(strcmp(predicate, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type") == 0)
     {
-        strResult[i] = str2[j];
-        i++;
-        j++;
+        object = getObjectSensorType(obs);
     }
-    return strResult;
+    else if (strcmp(predicate, "http://www.w3.org/ns/sosa/observedProperty") == 0)
+    {
+        object = getObjectMoreSensorType(obs);
+    }
+    else if (strcmp(predicate, "http://www.w3.org/ns/sosa/phenomenonTime") == 0)
+    {
+        object = getObjectDateTime(obs);
+    }
+    else if (strcmp(predicate, "http://www.w3.org/ns/sosa/resultTime") == 0)
+    {
+        object = getObjectMoreDateTime(obs);
+    }
+    else if (strcmp(predicate, "http://www.w3.org/ns/sosa/madeBySensor") == 0)
+    {
+        object = getObjectOther(obs);
+    }
+    else if (strcmp(predicate, "http://www.w3.org/ns/sosa/hasSimpleResult") == 0)
+    {
+        object = getObjectObservedValue(obs);
+    }
+
+    return object;
+}
+
+char* getObjectSensorType(Observation* obs)
+{
+    //  objExple: https://coswot.gitlab.io/ontology#TemperatureObservation
+    
+    char init[50] = "https://coswot.gitlab.io/ontology";
+
+    char sensorType1[30] = "LuminosityObservation";
+    char sensorType2[30] = "TemperatureObservation";
+    char sensorType3[30] = "HumidityObservation";
+
+    char* elem = malloc(1 * sizeof(char));
+    char* res = calloc(69,sizeof(char));
+
+    elem[0] = '#';
+    if( *(obs->sensorType) == 0 )
+    {
+        res = concatString(init,sensorType1,elem);
+    }
+    else if ( *(obs->sensorType) == 1 )
+    {
+        res = concatString(init,sensorType2,elem);
+    }
+    else if ( *(obs->sensorType) == 2 )
+    {
+        res = concatString(init,sensorType3,elem);
+    }
+
+    return res;
+}
+
+char* getObjectMoreSensorType(Observation* obs)
+{
+    // <http://example.org/id/property/emse_fauriel_4ET_405_sample1_ambientTemperatureProperty>;
+
+    char init[50] = "http://example.org/id/property";
+    
+    char sensorType1[30] = "sample1_luminosityProperty";
+    char sensorType2[50] = "sample1_ambientTemperatureProperty";
+    char sensorType3[50] = "sample1_relativeHumidityProperty";
+
+    char* elem = malloc(1 * sizeof(char));
+    char* res = calloc(70,sizeof(char));
+    char* buidingStairRoom = getAttr(obs);
+    
+
+    elem[0] = '/';
+    res = concatString(init,buidingStairRoom,elem);
+
+    elem[0] = '_';
+    if( *(obs->sensorType) == 0 )
+    {
+        res = concatString(res,sensorType1,elem);
+    }
+    else if ( *(obs->sensorType) == 1 )
+    {
+        res = concatString(res,sensorType2,elem);
+    }
+    else if ( *(obs->sensorType) == 2 )
+    {
+        res = concatString(res,sensorType3,elem);
+    }
+
+    return res;
+}
+
+char* getObjectDateTime(Observation* obs)
+{
+    //  objExple: http://example.org/id/instant/2022-03-23T19:14:16
+
+    char init[50] = "http://example.org/id/instant";
+    char* elem = malloc(1 * sizeof(char));
+    char* res = calloc(70,sizeof(char));
+    char* dateTime = getTimesAttr(obs);
+
+    elem[0] = '/';
+    res = concatString(init,dateTime,elem);
+
+    return res;
+}
+
+char* getObjectMoreDateTime(Observation* obs)
+{
+    //  objExple:  "2022-03-23T19:14:16Z"^^xsd:dateTime
+    char* dateTime = getTimesAttr(obs);
+    int lenRes = strlen(dateTime) + 1 +1;
+
+    char* res = calloc(lenRes, sizeof(char));
+    strcpy(res, dateTime);
+    res[lenRes-2] = 'Z';
+
+    return res;
+}
+
+char* getObjectOther(Observation* obs)
+{
+    //  objExple: http://example.org/id/sensor/emse_fauriel_4ET_405_6bd134b6-339c-4168-9aeb-ae7d0f236851_Humidity
+
+    char init[50] = "http://example.org/id/sensor";
+    
+    char sensorType1[20] = "Luminosity";
+    char sensorType2[20] = "Temperature";
+    char sensorType3[20] = "Humidity";
+    char outside[] = "outside";
+    char* buidingStairRoom = getAttr(obs);
+
+    char* elem = malloc(1 * sizeof(char));
+    char* res = calloc(70,sizeof(char));
+    
+
+    elem[0] = '/';
+    res = concatString(init,buidingStairRoom,elem);
+
+    elem[0] = '_';
+    if(obs->sensorID)
+    {
+        res = concatString(res,obs->sensorID,elem);
+    }
+    else
+    {
+        res = concatString(res,outside,elem);
+    }
+    
+
+    elem[0] = '_';
+    if( *(obs->sensorType) == 0 )
+    {
+        res = concatString(res,sensorType1,elem);
+    }
+    else if ( *(obs->sensorType) == 1 )
+    {
+        res = concatString(res,sensorType2,elem);
+    }
+    else if ( *(obs->sensorType) == 2 )
+    {
+        res = concatString(res,sensorType3,elem);
+    }
+
+    return res;
+}
+
+char* getTimesAttr(Observation* obs)
+{
+    // example: 2022-03-23T19:14:16
+
+    char year[10];
+    char month[10];
+    char day[10];
+
+    char hour[10];
+    char minute[10];
+    char second[10];
+
+    char* elem = malloc(1 * sizeof(char));
+    char* res = calloc(70,sizeof(char));
+
+
+    elem[0] = '-';
+    sprintf(year, "%d", obs->date.year); // To convert a int(obs->date.year) in a string(year)
+    char* yearBis = dateTimeElemParse(year); //To be sure that the string we will passed contains more than one caracter
+
+    sprintf(month, "%d", obs->date.month);
+    char* monthBis = dateTimeElemParse(month);
+    res = concatString(yearBis,monthBis,elem);
+   
+    elem[0] = '-';
+    sprintf(day, "%d", obs->date.day);
+    char* dayBis = dateTimeElemParse(day);
+    res = concatString(res,dayBis,elem);
+   
+    elem[0] = 'T';
+    sprintf(hour, "%d", obs->time.hour);
+    char* hourBis = dateTimeElemParse(hour);
+    res = concatString(res,hourBis,elem);
+
+    elem[0] = ':';
+    sprintf(minute, "%d", obs->time.minute);
+    char* minuteBis = dateTimeElemParse(minute);
+    res = concatString(res,minuteBis,elem);
+
+    elem[0] = ':';
+    sprintf(second, "%d", obs->time.second);
+    char* secondBis = dateTimeElemParse(second);
+    res = concatString(res,secondBis,elem);
+
+    return res;
+
+}
+
+char* getAttr(Observation* obs)
+{
+    // example : emse_fauriel_4ET_405
+    char* elem = malloc(1 * sizeof(char));
+    char* res = calloc(70,sizeof(char));
+    
+
+    elem[0] = '_';
+    res = concatString(obs->building, obs->stair, elem);
+
+    elem[0] = '_';
+    res = concatString(res,obs->room,elem);
+
+    return res;
+
+}
+
+char* getObjectObservedValue(Observation* obs)
+{
+    //  objExple: “27.37”^^xsd:float 
+
+    char end[50] = "^^xsd:float"; 
+    char* elem = malloc(1 * sizeof(char));
+    char* res = calloc(70,sizeof(char));
+    
+    char observedValue[10];
+    gcvt(obs->observedValue, 5, observedValue); //to convert a float to a string
+    char* observedValueBis = dateTimeElemParse(observedValue); //To be sure that the string we will passed contains more than one caracter
+
+    /*int len = strlen(observedValueBis);
+    char* strResult = calloc((len+1+1), sizeof(char));
+
+    strResult[0] = '"';
+    for(int i=1; i<len+1; i++)
+    {
+        strResult[i] = observedValueBis[i-1];
+    }
+
+    elem[0] = '"';
+    res = concatString(strResult,end,elem);*/
+
+    return observedValueBis;
 }
 
 
 
+
+
+
+
+
+void test(char* initialFactFilePath)
+{
+   
+        SordWorld* world = sord_world_new();
+        SordModel* kb = sord_new(world, SORD_SPO, false);
+
+        if (initialFactFilePath != NULL)
+        {
+            SerdEnv* env = serd_env_new(NULL);
+            SerdReader* reader = sord_new_reader(kb, env, SERD_TURTLE, NULL);
+
+            FILE* file = fopen(initialFactFilePath, "r");
+            SerdStatus status = serd_reader_read_file_handle(reader, file, NULL);
+            if (status == SERD_SUCCESS)
+            {
+                fclose(file);
+                serd_env_free(env);
+                serd_reader_free(reader);
+                printf("-----> %zu facts read in the file facts.ttl.\n", sord_num_quads(kb));
+            }
+            else
+            {
+                fclose(file);
+                serd_env_free(env);
+                serd_reader_free(reader);
+            }
+        }
+        
+}
+
+
+/*char* APIMatchFact(KBWrapper* w, char* s, char* p, char* o, char* g)
+{
+    SordWorld* world = sord_get_world(w->kb);
+    SordNode* subject = (s != NULL && strcmp(s, "") != 0) ? sord_new_uri(world, (const uint8_t*)s) : NULL;
+    SordNode* predicate = (p != NULL && strcmp(p, "") != 0) ? sord_new_uri(world, (const uint8_t*)p) : NULL;
+    SordNode* object = (o != NULL && strcmp(o, "") != 0) ? sord_new_uri(world, (const uint8_t*)o) : NULL;
+    SordNode* graph = (g != NULL && strcmp(g, "") != 0) ? sord_new_uri(world, (const uint8_t*)g) : NULL;
+    SordQuad pattern = {subject, predicate, object, graph};
+
+    SerdEnv* env = serd_env_new(NULL);
+
+    SerdChunk chunk = {NULL, 0};
+    SerdWriter* writer = serd_writer_new(SERD_TURTLE, SERD_STYLE_ABBREVIATED, env, NULL, serd_chunk_sink, &chunk);
+
+    SordIter* res = sord_find(w->kb, pattern);
+
+    sord_node_free(world, subject);
+    sord_node_free(world, predicate);
+    sord_node_free(world, object);
+    sord_node_free(world, graph);*/
+
+    /*
+    while (!sord_iter_end(res))
+    {
+        SordQuad quad;
+        sord_iter_get(res, quad);
+        serd_writer_write_statement(writer, 0, sord_node_to_serd_node(quad[3]), sord_node_to_serd_node(quad[0]), sord_node_to_serd_node(quad[1]), sord_node_to_serd_node(quad[2]), NULL, NULL);
+        sord_iter_next(res);
+    }
+    */
+
+    /*sord_write_iter(res, writer);
+
+    serd_writer_free(writer);
+    serd_env_free(env);
+
+    char* out = (char*)serd_chunk_sink_finish(&chunk);
+
+    return out;
+}*/
+
+
+    
+
+    

@@ -1,10 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "Date.h"
 #include "Time.h"
 #include "SensorType.h"
 #include "LinkedList.h"
+#include "Utils.h"
+
+#include "serd/serd.h"
+#include "sord/sord.h"
+#include "sord_internal.h"
+
+#include "zix/digest.h"
+
+//#include "sord_test.c"
 
 
 
@@ -35,17 +45,72 @@ LinkedList* readFromFile(char* filepath);
  */
 Observation* readFromStream(char* stream);
 
+/**
+ * Free an observation object  .
+ */
+void freeObservation(Observation* obs);
 
 /**
  * Print all obervations stored in a LinkedList  .
  */
 void printObs(LinkedList* l);
 
-/**
- * concatenates two strings by putting "_" in the middle.
- */
 
-char* concatString(char* str1, char* str2);
+/**
+ * get the subject (as a string) from an observation.
+ */
+char* getSubject(Observation* obs);
+
+/**
+ * get the object (as a string) from an observation.
+ */
+char* getObject(Observation* obs, char* predicate);
+
+/**
+ * get the sensorType object (as a string) from an observation.
+ */
+char* getObjectSensorType(Observation* obs);
+
+/**
+ * get more information about the sensorType (as a string) from an observation.
+ */
+char* getObjectMoreSensorType(Observation* obs);
+
+/**
+ * get the date and time object (as a string) from an observation.
+ */
+char* getObjectDateTime(Observation* obs);
+
+/**
+ * get more information about the date and time (as a string) from an observation.
+ */
+char* getObjectMoreDateTime(Observation* obs);
+
+
+/**
+ * get the observedValue object (as a string) from an observation.
+ */
+char* getObjectObservedValue(Observation* obs);
+
+/**
+ * get the building, stair, room, sensorID and sensorType object (as a string) from an observation.
+ */
+char* getObjectOther(Observation* obs);
+
+/**
+ * get the date and time attributes (as a string) from an observation.
+ */
+char* getTimesAttr(Observation* obs);
+
+/**
+ * get the building, stair and room attributes (as a string) from an observation.
+ */
+char* getAttr(Observation* obs);
+
+
+
+void test(char* initialFactFilePath);
+
 
 
 #endif // OBSERVATION_H_INCLUDED
