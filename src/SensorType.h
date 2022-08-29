@@ -5,7 +5,9 @@
 #ifndef SENSORTYPE_H_INCLUDED
 #define SENSORTYPE_H_INCLUDED
 
-
+/**
+ * Structure repesenting the SensorType attribute of an observation's instance.
+ */
 enum SensorType
 {
     Luminosity,

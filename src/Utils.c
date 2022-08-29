@@ -1,15 +1,14 @@
 #include "Utils.h"
 
+// ----------------------------------- Utils -------------------------------------
+
 char* concatString(char* str1, char* str2, char* elemnt)
 {
     int lenStr1 = strlen(str1);
     int lenStr2 = strlen(str2);
     int lenResult = lenStr1 + lenStr2 + 1 + 1;
     char* strResult = calloc(lenResult,sizeof(char));
-    /*strcpy(strResult,str1);
-    strcat(strResult, elemnt);
-    strcat(strResult, str2);*/
-
+    
     int i=0;
     while (i<lenStr1)
     {

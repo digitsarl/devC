@@ -1,4 +1,5 @@
 #include "LinkedList.h"
+#include "Observation.h"
 
 // ----------------------------------- Linked List -------------------------------------
 
@@ -68,6 +69,7 @@ void freeLinkedList(LinkedList* l)
 	{
 		tmp = current;
 		current = current->next;
+		freeObservation(tmp->data);
 		free(tmp);
 	}
 	

@@ -14,29 +14,64 @@
 
 #include "zix/digest.h"
 
-//#include "sord_test.c"
-
-
 
 #ifndef OBSERVATION_H_INCLUDED
 #define OBSERVATION_H_INCLUDED
 
+// ---------------------------------------------- Structures ---------------------------------------------------
+
+/**
+ * Structure representing an observation.
+ */
 struct Observation
 {
+    /**
+     * Structure representing the date.
+     */
     Date date;
+
+    /**
+     * Structure representing the time.
+     */
     Time time;
+
+    /**
+     * It represents the name of the building .
+     */
     char* building;
+
+    /**
+     * It represents the number of the floor .
+     */
     char* stair;
+
+    /**
+     * It represents the number of the room .
+     */
     char* room;
+
+    /**
+     * it represents the identifier of the sensor.
+     */
     char* sensorID;
+
+    /**
+     * Structure representing the type of the sensor.
+     */
     SensorType* sensorType;
+
+     /**
+     * it represents the observed value by the sensor.
+     */
     float observedValue;  
 
 };
 typedef struct Observation Observation;
 
+// ---------------------------------------------- Functions ---------------------------------------------------
+
 /**
- * read a file and put the results in a LinkedKist.
+ * read a file and put the results (instances of observations) in a LinkedList.
  */
 LinkedList* readFromFile(char* filepath);
 
@@ -46,15 +81,14 @@ LinkedList* readFromFile(char* filepath);
 Observation* readFromStream(char* stream);
 
 /**
- * Free an observation object  .
+ *Frees the memory space allocated to the observation's instance.
  */
 void freeObservation(Observation* obs);
 
 /**
- * Print all obervations stored in a LinkedList  .
+ * Display in console all obervations stored in a LinkedList  .
  */
 void printObs(LinkedList* l);
-
 
 /**
  * get the subject (as a string) from an observation.
@@ -63,37 +97,38 @@ char* getSubject(Observation* obs);
 
 /**
  * get the object (as a string) from an observation.
+ * @param predicate is a predicate (as a string) of a fact.
  */
 char* getObject(Observation* obs, char* predicate);
 
 /**
- * get the sensorType object (as a string) from an observation.
+ * get the object (as a string) referring to the sensorType attribute from an observation.
  */
 char* getObjectSensorType(Observation* obs);
 
 /**
- * get more information about the sensorType (as a string) from an observation.
+ * get the object (as a string) referring to more information about the sensorType from an observation.
  */
 char* getObjectMoreSensorType(Observation* obs);
 
 /**
- * get the date and time object (as a string) from an observation.
+ * get the object (as a string) referring to date and time attributes from an observation.
  */
 char* getObjectDateTime(Observation* obs);
 
 /**
- * get more information about the date and time (as a string) from an observation.
+ * get the object (as a string) referring to more information about the date and time from an observation.
  */
 char* getObjectMoreDateTime(Observation* obs);
 
-
 /**
- * get the observedValue object (as a string) from an observation.
+ * get object (as a string) referring to the observedValue attribute from an observation.
+ * This object (as a string) will be converted to a literal SordNode later 
  */
 char* getObjectObservedValue(Observation* obs);
 
 /**
- * get the building, stair, room, sensorID and sensorType object (as a string) from an observation.
+ * get the object (as a string) referring to the building, stair, room, sensorID and sensorType attributes from an observation.
  */
 char* getObjectOther(Observation* obs);
 
@@ -107,9 +142,6 @@ char* getTimesAttr(Observation* obs);
  */
 char* getAttr(Observation* obs);
 
-
-
-void test(char* initialFactFilePath);
 
 
 

@@ -3,36 +3,37 @@
 #ifndef FACTS_H_INCLUDED
 #define FACTS_H_INCLUDED
 
+
 /**
  * Add a quad (fact) to a model.
  */
-bool AddFact(SordModel* mod, char* s, char* p, char* o, char* g);
+void AddFact(SordModel* mod, char* s, char* p, char* o, char* g);
 
 /**
  * Add a quad (fact) to a model. But the object string will be converted to a sordNode literal
+ * @param datatype is a string that will be converted to a SordNode URI representing the datatype associated to the SordNode literal.
  */
-void AddFactWithLiteralObject(SordModel* mod, char* s, char* p, char* o, char* g, SordNode* datatype);
+void AddFactWithLiteralObject(SordModel* mod, char* s, char* p, char* o, char* g, char* datatype);
 
 /**
- * Add many quads (facts) to a model from an observation.
+ * Add many quads (facts) to a model from an observation's instance.
  */
-bool AddFactsFromObservation(SordModel* mod, Observation* obs);
-
+void AddFactsFromObservation(SordModel* mod, Observation* obs);
 
 /**
- * Add many quads (facts) to a model from a LinkedList of observation.
+ * Add many quads (facts) to a model from a LinkedList of observation'instances.
  */
 void AddFactsFromLinkedList(LinkedList* l, SordModel* mod);
 
 /**
- * Add many quads (facts) to a model from a LinkedList of observation.
+ * Write many quads (facts) in the file. these facts are extracted from a model.
  */
 void makeFileFacts(char* filepath, SordModel* mod);
 
 /**
- * Return a string containing all facts of a model.
+ * Display in console the facts contained in a model .
  */
-char* printFact(SordModel* mod);
+void printFact(SordModel* mod);
 
 /**
  * Create a SordNode* uri instance from a str.
@@ -45,9 +46,9 @@ SordNode* createSordNode(char* str, SordModel* mod);
 SordNode* createSordNodeLiteral(char* str, SordModel* mod);
 
 /**
- * Create a SordNode* blank instance from a str.
+ * reads and counts the number of facts contained in a file.
  */
-SordNode* createSordNodeBlank(char* str, SordModel* mod);
+void readFileOfFacts(char* initialFactFilePath);
 
 
 #endif // FACTS_H_INCLUDED

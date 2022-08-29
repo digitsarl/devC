@@ -1,6 +1,7 @@
 #include "Observation.h"
 #define TAILLE_MAX 200
 
+// ----------------------------------- Observations ----------------------------------------------------
 
 LinkedList* readFromFile(char* filepath)   
 {
@@ -28,12 +29,10 @@ LinkedList* readFromFile(char* filepath)
                 {
                     obs = readFromStream(stream);
                     insertInLast(l ,obs);
-                   
                 }
             }
             
         }
-
         fclose(file);
 
         //free the stream
@@ -271,10 +270,6 @@ void printObs(LinkedList* l)
 
 }
 
-
-
-
-
 char* getSubject(Observation* obs)
 {
     //**http://example.org/id/observation/emse_fauriel_3ET_460_Humidity_2022-03-23T19:14:16
@@ -373,7 +368,7 @@ char* getObject(Observation* obs, char* predicate)
 
 char* getObjectSensorType(Observation* obs)
 {
-    //  objExple: https://coswot.gitlab.io/ontology#TemperatureObservation
+    //  objExple: https://coswot.gitlab.io/ontology#LuminosityObservation
     
     char init[50] = "https://coswot.gitlab.io/ontology";
 
@@ -492,7 +487,6 @@ char* getObjectOther(Observation* obs)
     {
         res = concatString(res,outside,elem);
     }
-    
 
     elem[0] = '_';
     if( *(obs->sensorType) == 0 )
@@ -529,7 +523,7 @@ char* getTimesAttr(Observation* obs)
 
     elem[0] = '-';
     sprintf(year, "%d", obs->date.year); // To convert a int(obs->date.year) in a string(year)
-    char* yearBis = dateTimeElemParse(year); //To be sure that the string we will passed contains more than one caracter
+    char* yearBis = dateTimeElemParse(year); //To be sure that the string passed contains more than one caracter
 
     sprintf(month, "%d", obs->date.month);
     char* monthBis = dateTimeElemParse(month);
@@ -556,7 +550,6 @@ char* getTimesAttr(Observation* obs)
     res = concatString(res,secondBis,elem);
 
     return res;
-
 }
 
 char* getAttr(Observation* obs)
@@ -573,32 +566,15 @@ char* getAttr(Observation* obs)
     res = concatString(res,obs->room,elem);
 
     return res;
-
 }
 
 char* getObjectObservedValue(Observation* obs)
 {
-    //  objExple: “27.37”^^xsd:float 
+    //  objExple: “27.37”^^xsd:float   float is the datatype
 
-    char end[50] = "^^xsd:float"; 
-    char* elem = malloc(1 * sizeof(char));
-    char* res = calloc(70,sizeof(char));
-    
     char observedValue[10];
     gcvt(obs->observedValue, 5, observedValue); //to convert a float to a string
     char* observedValueBis = dateTimeElemParse(observedValue); //To be sure that the string we will passed contains more than one caracter
-
-    /*int len = strlen(observedValueBis);
-    char* strResult = calloc((len+1+1), sizeof(char));
-
-    strResult[0] = '"';
-    for(int i=1; i<len+1; i++)
-    {
-        strResult[i] = observedValueBis[i-1];
-    }
-
-    elem[0] = '"';
-    res = concatString(strResult,end,elem);*/
 
     return observedValueBis;
 }
@@ -608,79 +584,6 @@ char* getObjectObservedValue(Observation* obs)
 
 
 
-
-
-void test(char* initialFactFilePath)
-{
-   
-        SordWorld* world = sord_world_new();
-        SordModel* kb = sord_new(world, SORD_SPO, false);
-
-        if (initialFactFilePath != NULL)
-        {
-            SerdEnv* env = serd_env_new(NULL);
-            SerdReader* reader = sord_new_reader(kb, env, SERD_TURTLE, NULL);
-
-            FILE* file = fopen(initialFactFilePath, "r");
-            SerdStatus status = serd_reader_read_file_handle(reader, file, NULL);
-            if (status == SERD_SUCCESS)
-            {
-                fclose(file);
-                serd_env_free(env);
-                serd_reader_free(reader);
-                printf("-----> %zu facts read in the file facts.ttl.\n", sord_num_quads(kb));
-            }
-            else
-            {
-                fclose(file);
-                serd_env_free(env);
-                serd_reader_free(reader);
-            }
-        }
-        
-}
-
-
-/*char* APIMatchFact(KBWrapper* w, char* s, char* p, char* o, char* g)
-{
-    SordWorld* world = sord_get_world(w->kb);
-    SordNode* subject = (s != NULL && strcmp(s, "") != 0) ? sord_new_uri(world, (const uint8_t*)s) : NULL;
-    SordNode* predicate = (p != NULL && strcmp(p, "") != 0) ? sord_new_uri(world, (const uint8_t*)p) : NULL;
-    SordNode* object = (o != NULL && strcmp(o, "") != 0) ? sord_new_uri(world, (const uint8_t*)o) : NULL;
-    SordNode* graph = (g != NULL && strcmp(g, "") != 0) ? sord_new_uri(world, (const uint8_t*)g) : NULL;
-    SordQuad pattern = {subject, predicate, object, graph};
-
-    SerdEnv* env = serd_env_new(NULL);
-
-    SerdChunk chunk = {NULL, 0};
-    SerdWriter* writer = serd_writer_new(SERD_TURTLE, SERD_STYLE_ABBREVIATED, env, NULL, serd_chunk_sink, &chunk);
-
-    SordIter* res = sord_find(w->kb, pattern);
-
-    sord_node_free(world, subject);
-    sord_node_free(world, predicate);
-    sord_node_free(world, object);
-    sord_node_free(world, graph);*/
-
-    /*
-    while (!sord_iter_end(res))
-    {
-        SordQuad quad;
-        sord_iter_get(res, quad);
-        serd_writer_write_statement(writer, 0, sord_node_to_serd_node(quad[3]), sord_node_to_serd_node(quad[0]), sord_node_to_serd_node(quad[1]), sord_node_to_serd_node(quad[2]), NULL, NULL);
-        sord_iter_next(res);
-    }
-    */
-
-    /*sord_write_iter(res, writer);
-
-    serd_writer_free(writer);
-    serd_env_free(env);
-
-    char* out = (char*)serd_chunk_sink_finish(&chunk);
-
-    return out;
-}*/
 
 
     

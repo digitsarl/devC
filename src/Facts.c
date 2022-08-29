@@ -1,35 +1,13 @@
 #include "Facts.h"
 
-bool AddFact(SordModel* mod, char* s, char* p, char* o, char* g)
+// ----------------------------------- Facts -------------------------------------
+
+void AddFact(SordModel* mod, char* s, char* p, char* o, char* g)
 {
-    bool result = false;
     SordWorld* world = sord_get_world(mod);
     SordNode* subject = sord_new_uri(world, (const uint8_t*)s);
     SordNode* predicate = sord_new_uri(world, (const uint8_t*)p);
     SordNode* object = sord_new_uri(world, (const uint8_t*)o);
-    SordNode* graph = sord_new_uri(world, (const uint8_t*)g);
-    SordQuad quad = {subject, predicate, object, graph};
-
-    if (!sord_ask(mod, subject, predicate, object, graph))
-    {
-        result = sord_add(mod, quad);
-    }
-
-    sord_node_free(world, subject);
-    sord_node_free(world, predicate);
-    sord_node_free(world, object);
-    sord_node_free(world, graph);
-
-    return result;
-}
-
-void AddFactWithLiteralObject(SordModel* mod, char* s, char* p, char* o, char* g, SordNode* datatype)
-{
-    SordWorld* world = sord_get_world(mod);
-    SordNode* subject = sord_new_uri(world, (const uint8_t*)s);
-    SordNode* predicate = sord_new_uri(world, (const uint8_t*)p);
-
-    SordNode* object = sord_new_literal(world, datatype, (const uint8_t*)o, NULL);
     SordNode* graph = sord_new_uri(world, (const uint8_t*)g);
     SordQuad quad = {subject, predicate, object, graph};
 
@@ -42,11 +20,35 @@ void AddFactWithLiteralObject(SordModel* mod, char* s, char* p, char* o, char* g
     sord_node_free(world, predicate);
     sord_node_free(world, object);
     sord_node_free(world, graph);
+
 }
 
-bool AddFactsFromObservation(SordModel* mod, Observation* obs)
+void AddFactWithLiteralObject(SordModel* mod, char* s, char* p, char* o, char* g, char* datatype)
 {
-    bool result = false;
+    SordWorld* world = sord_get_world(mod);
+    SordNode* subject = sord_new_uri(world, (const uint8_t*)s);
+    SordNode* predicate = sord_new_uri(world, (const uint8_t*)p);
+
+    SordNode* datatypeNode = sord_new_uri(world, (const uint8_t*)datatype);
+    SordNode* object = sord_new_literal(world, datatypeNode, (const uint8_t*)o, NULL);
+
+    SordNode* graph = sord_new_uri(world, (const uint8_t*)g);
+    SordQuad quad = {subject, predicate, object, graph};
+
+    if (!sord_ask(mod, subject, predicate, object, graph))
+    {
+        sord_add(mod, quad);
+    }
+
+    sord_node_free(world, subject);
+    sord_node_free(world, predicate);
+    sord_node_free(world, object);
+    sord_node_free(world, datatypeNode);
+    sord_node_free(world, graph);
+}
+
+void AddFactsFromObservation(SordModel* mod, Observation* obs)
+{
     //get the graph
     char graph[50] = "http://example.org/graph/g1";
 
@@ -75,23 +77,23 @@ bool AddFactsFromObservation(SordModel* mod, Observation* obs)
     char* O_ObservedValue = getObject(obs,P_ObservedValue);
 
     
-
-    
     //Add facts
-    result = AddFact(mod,subject, P_SensorType, O_SensorType, graph);
-    result = AddFact(mod,subject, P_MoreSensorType, O_MoreSensorType, graph);
-    result = AddFact(mod,subject, P_DateTime, O_DateTime, graph);
-    result = AddFact(mod,subject, P_Other, O_Other, graph);
+    AddFact(mod,subject, P_SensorType, O_SensorType, graph);
+    AddFact(mod,subject, P_MoreSensorType, O_MoreSensorType, graph);
+    AddFact(mod,subject, P_DateTime, O_DateTime, graph);
+    AddFact(mod,subject, P_Other, O_Other, graph);
     
 
-    //create a datatype (SordNode) for the literal node (object) of observed value
-    char str[] = "float";
-    SordNode* datatype = createSordNodeBlank(str,mod);
+    //create a datatype (as a string) for the literal node (object) of observed value
+    char strDatatypeObservedValue[] = "xsd:float";
 
-    AddFactWithLiteralObject(mod,subject, P_ObservedValue, O_ObservedValue, graph, datatype);
+    AddFactWithLiteralObject(mod,subject, P_ObservedValue, O_ObservedValue, graph, strDatatypeObservedValue);
 
-    AddFactWithLiteralObject(mod,subject, P_MoreDateTime, O_MoreDateTime, graph, datatype);
+    //create a datatype (as a string) for the literal node (object) of Date and time
+    char strDatatypeMoreDateTime[] = "xsd:dateTime";
 
+    AddFactWithLiteralObject(mod,subject, P_MoreDateTime, O_MoreDateTime, graph, strDatatypeMoreDateTime);
+    
     free(subject);
     free(O_SensorType); 
     free(O_MoreSensorType);
@@ -99,8 +101,6 @@ bool AddFactsFromObservation(SordModel* mod, Observation* obs)
     free(O_MoreDateTime);
     free(O_Other);
     free(O_ObservedValue);
-
-    return result;
 }
 
 void AddFactsFromLinkedList(LinkedList* l, SordModel* mod)
@@ -120,6 +120,7 @@ void makeFileFacts(char* filepath, SordModel* mod)
     file = fopen(filepath, "w");
     if(file!= NULL)
     {
+        SordWorld* world = sord_get_world(mod);
         SerdEnv* env = serd_env_new(NULL);
         SerdWriter* writer = serd_writer_new(SERD_TURTLE, SERD_STYLE_ABBREVIATED, env, NULL, serd_file_sink, file);
 
@@ -132,7 +133,6 @@ void makeFileFacts(char* filepath, SordModel* mod)
         strcpy(prefixUriStr, "http://www.w3.org/2000/01/rdf-schema#");
         SordNode* prefixURI = createSordNode(prefixUriStr,mod);
 
-        //write the prefix
         serd_writer_set_prefix(writer, sord_node_to_serd_node(prefixName), sord_node_to_serd_node(prefixURI));
 
         strcpy(prefixNameStr, "xsd");
@@ -248,13 +248,22 @@ void makeFileFacts(char* filepath, SordModel* mod)
         {
             SordQuad quad;
             sord_iter_get(tempFacts, quad);
-            serd_writer_write_statement(writer, 0, sord_node_to_serd_node(quad[3]), sord_node_to_serd_node(quad[0]), sord_node_to_serd_node(quad[1]), sord_node_to_serd_node(quad[2]), NULL, NULL);
+
+            SordNode* datatype = sord_node_get_datatype(quad[2]);
+
+            serd_writer_write_statement(writer, 0, sord_node_to_serd_node(quad[3]), sord_node_to_serd_node(quad[0]), sord_node_to_serd_node(quad[1]), sord_node_to_serd_node(quad[2]), sord_node_to_serd_node(datatype), NULL);
             sord_iter_next(tempFacts);
         }
         serd_writer_finish(writer);
+
         sord_iter_free(tempFacts);
         serd_writer_free(writer);
         serd_env_free(env);
+
+        free(prefixNameStr);
+        free(prefixUriStr);
+        sord_node_free(world,prefixName);
+        sord_node_free(world,prefixURI);
 
         fclose(file);
     }
@@ -265,7 +274,7 @@ void makeFileFacts(char* filepath, SordModel* mod)
 }
 
 
-char* printFact(SordModel* mod)
+void printFact(SordModel* mod)
 {
     SerdEnv* env = serd_env_new(NULL);
     SerdChunk chunk = {NULL, 0};
@@ -277,18 +286,53 @@ char* printFact(SordModel* mod)
     {
         SordQuad quad;
         sord_iter_get(tempFacts, quad);
-        serd_writer_write_statement(writer, 0, sord_node_to_serd_node(quad[3]), sord_node_to_serd_node(quad[0]), sord_node_to_serd_node(quad[1]), sord_node_to_serd_node(quad[2]), NULL, NULL);
+
+        SordNode* datatype = sord_node_get_datatype(quad[2]);
+
+        serd_writer_write_statement(writer, 0, sord_node_to_serd_node(quad[3]), sord_node_to_serd_node(quad[0]), sord_node_to_serd_node(quad[1]), sord_node_to_serd_node(quad[2]), sord_node_to_serd_node(datatype), NULL);
         sord_iter_next(tempFacts);
-        //printf("%d explicit facts read\n", count);
         count++;
     }
     sord_iter_free(tempFacts);
     serd_writer_free(writer);
     serd_env_free(env);
     char* out = (char*)serd_chunk_sink_finish(&chunk);
-    printf("%d explicit facts read\n", count);
-       
-    return out;
+
+    printf("\n\n*************************print of differents facts :******************************\n\n");
+    printf("%s\n", out);
+
+    printf("%d facts read from the model\n", count);
+
+    //Free the string of facts
+    free(out);
+}
+
+void readFileOfFacts(char* initialFactFilePath)
+{
+        SordWorld* world = sord_world_new();
+        SordModel* kb = sord_new(world, SORD_SPO, false);
+
+        if (initialFactFilePath != NULL)
+        {
+            SerdEnv* env = serd_env_new(NULL);
+            SerdReader* reader = sord_new_reader(kb, env, SERD_TURTLE, NULL);
+
+            FILE* file = fopen(initialFactFilePath, "r");
+            SerdStatus status = serd_reader_read_file_handle(reader, file, NULL);
+            if (status == SERD_SUCCESS)
+            {
+                fclose(file);
+                serd_env_free(env);
+                serd_reader_free(reader);
+                printf("-----> %zu facts read in the file facts.ttl.\n", sord_num_quads(kb));
+            }
+            else
+            {
+                fclose(file);
+                serd_env_free(env);
+                serd_reader_free(reader);
+            }
+        }
 }
 
 SordNode* createSordNode(char* str, SordModel* mod)
@@ -303,14 +347,6 @@ SordNode* createSordNodeLiteral(char* str, SordModel* mod)
 {
     SordWorld* world = sord_get_world(mod);
     SordNode* sordnode = sord_new_literal(world, NULL, (const uint8_t*)str, NULL);
-
-    return sordnode;
-}
-
-SordNode* createSordNodeBlank(char* str, SordModel* mod)
-{
-    SordWorld* world = sord_get_world(mod);
-    SordNode* sordnode = sord_new_blank(world,(const uint8_t*)str);
 
     return sordnode;
 }

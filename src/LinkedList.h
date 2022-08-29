@@ -60,7 +60,7 @@ typedef struct LinkedList LinkedList;
 LinkedList* createLinkedList();
 
 /**
- * Inserts an element at the end of the list..
+ * Inserts an element at the end of the list.
  */
 void insertInLast(LinkedList *l ,void* element );
 
