@@ -1,5 +1,6 @@
 
 # FactGenerator
+
 FactGenerator is a s-p-o-g facts generator (s for subject, p for predicate, o for object and g for graph). It is written in C.
 
 
@@ -54,4 +55,6 @@ We provide a Makefile to compile FactGenerator. To compile and run the code pres
 make
 ./executable/Main
 ```
+
+After, go in the data folder and take the facts.ttl file where is written the differents s-p-o-g facts generated.
 

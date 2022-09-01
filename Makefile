@@ -1,4 +1,4 @@
-MICROCONTROLER = executable/Main
+FACT_GENERATOR = executable/Main
 CC = clang
 CFLAGS= 
 LINKER = clang
@@ -6,7 +6,7 @@ LFLAGS = -lm
 
 SRCDIR = src
 OBJDIR = obj
-MICROCONTROLER_CFLAGS = $(CFLAGS) -I serd/include -I sord/include -I sord/src
+FACT_GENERATOR_CFLAGS = $(CFLAGS) -I serd/include -I sord/include -I sord/src
 
 PARSER_SRCDIR = serd/src
 PARSER_OBJDIR = serd/obj
@@ -42,7 +42,7 @@ RM = rm -rf
 MKDIR = mkdir
 
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c $(INCLUDES) | objects
-	@$(CC) $(MICROCONTROLER_CFLAGS)  -c $< -o $@
+	@$(CC) $(FACT_GENERATOR_CFLAGS)  -c $< -o $@
 
 $(PARSER_OBJECTS): $(PARSER_OBJDIR)/%.o : $(PARSER_SRCDIR)/%.c $(PARSER_INCLUDES) | parser_objects
 	@$(CC) $(PARSER_CFLAGS) -c $< -o $@
@@ -67,12 +67,12 @@ zix_objects:
 
 .PHONY: clean all
 
-$(MICROCONTROLER): $(OBJECTS) $(PARSER_OBJECTS) $(TSTORE_OBJECTS)
-	$(CC) -o $@ $^ $(MICROCONTROLER_CFLAGS) $(LFLAGS)
+$(FACT_GENERATOR): $(OBJECTS) $(PARSER_OBJECTS) $(TSTORE_OBJECTS)
+	$(CC) -o $@ $^ $(FACT_GENERATOR_CFLAGS) $(LFLAGS)
 
 clean:
 	@$(RM) $(OBJDIR) $(PARSER_OBJDIR) $(TSTORE_OBJDIR)
 
-all : clean $(MICROCONTROLER)
+all : clean $(FACT_GENERATOR)
 
 .DEFAULT_GOAL := all
