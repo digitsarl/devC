@@ -12,6 +12,7 @@ FactGenerator is a s-p-o-g facts generator (s for subject, p for predicate, o fo
  4. The ```data_Output``` folder which contains three (03) files "facts_observations.ttl" in relation to the "observations.txt" input file, "facts_observations_externes.ttl" in relation to the "observations_externes.txt" input file and "fichier_output_20s.ttl" in relation to the "fichier_input_20s.txt" input file. 
  
  These files represents the s-p-o-g facts that are generated after execution of the program
+ 
  5. The ```serd folder``` which will contains the differents files of the serd library
  6. The ```sord``` folder which will contains the differents files of the sord library
  7. The ```makefile``` file
