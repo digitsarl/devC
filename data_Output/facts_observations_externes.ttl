@@ -1,0 +1,118 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix ont: <https://coswot.gitlab.io/ontology#> .
+@prefix sos: <http://www.w3.org/ns/sosa/> .
+@prefix s: <http://example.org/id/sample/> .
+@prefix res: <http://example.org/id/result/> .
+@prefix cdt: <https://w3id.org/cdt/> .
+@prefix sen: <http://example.org/id/sensor/> .
+@prefix pro: <http://example.org/id/property/> .
+@prefix pl: <http://example.org/id/platform/> .
+@prefix qudt: <http://qudt.org/schema/qudt/> .
+@prefix unit: <http://qudt.org/vocab/unit/> .
+@prefix room: <http://example.org/id/room/> .
+@prefix bot: <https://w3id.org/bot#> .
+@prefix sto: <http://example.org/id/storey/> .
+@prefix ssn: <http://www.w3.org/ns/ssn/> .
+@prefix bui: <http://example.org/id/building/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> .
+<http://example.org/graph/g1> {
+	 <http://example.org/id/observation/emse_fayol_3ET_325_Temperature_2022-03-23T19:15:20>
+		a <https://coswot.gitlab.io/ontology#TemperatureObservation> ;
+		<http://www.w3.org/ns/sosa/hasSimpleResult> "13.36"^^<xsd:float> ;
+		<http://www.w3.org/ns/sosa/madeBySensor> <http://example.org/id/sensor/emse_fayol_3ET_325_outside_Temperature> ;
+		<http://www.w3.org/ns/sosa/observedProperty> <http://example.org/id/property/emse_fayol_3ET_325_sample1_ambientTemperatureProperty> ;
+		<http://www.w3.org/ns/sosa/phenomenonTime> <http://example.org/id/instant/2022-03-23T19:15:20> ;
+		<http://www.w3.org/ns/sosa/resultTime> "2022-03-23T19:15:20Z"^^<xsd:dateTime> .
+
+<http://example.org/id/observation/emse_fayol_3ET_328_Temperature_2022-03-23T19:15:20>
+		a <https://coswot.gitlab.io/ontology#TemperatureObservation> ;
+		<http://www.w3.org/ns/sosa/hasSimpleResult> "13.36"^^<xsd:float> ;
+		<http://www.w3.org/ns/sosa/madeBySensor> <http://example.org/id/sensor/emse_fayol_3ET_328_outside_Temperature> ;
+		<http://www.w3.org/ns/sosa/observedProperty> <http://example.org/id/property/emse_fayol_3ET_328_sample1_ambientTemperatureProperty> ;
+		<http://www.w3.org/ns/sosa/phenomenonTime> <http://example.org/id/instant/2022-03-23T19:15:20> ;
+		<http://www.w3.org/ns/sosa/resultTime> "2022-03-23T19:15:20Z"^^<xsd:dateTime> .
+
+<http://example.org/id/observation/emse_fayol_3ET_332_Temperature_2022-03-23T19:15:20>
+		a <https://coswot.gitlab.io/ontology#TemperatureObservation> ;
+		<http://www.w3.org/ns/sosa/hasSimpleResult> "13.36"^^<xsd:float> ;
+		<http://www.w3.org/ns/sosa/madeBySensor> <http://example.org/id/sensor/emse_fayol_3ET_332_outside_Temperature> ;
+		<http://www.w3.org/ns/sosa/observedProperty> <http://example.org/id/property/emse_fayol_3ET_332_sample1_ambientTemperatureProperty> ;
+		<http://www.w3.org/ns/sosa/phenomenonTime> <http://example.org/id/instant/2022-03-23T19:15:20> ;
+		<http://www.w3.org/ns/sosa/resultTime> "2022-03-23T19:15:20Z"^^<xsd:dateTime> .
+
+<http://example.org/id/observation/emse_fayol_4ET_400_Humidity_2022-03-23T19:15:20>
+		a <https://coswot.gitlab.io/ontology#HumidityObservation> ;
+		<http://www.w3.org/ns/sosa/hasSimpleResult> "13.36"^^<xsd:float> ;
+		<http://www.w3.org/ns/sosa/madeBySensor> <http://example.org/id/sensor/emse_fayol_4ET_400_outside_Humidity> ;
+		<http://www.w3.org/ns/sosa/observedProperty> <http://example.org/id/property/emse_fayol_4ET_400_sample1_relativeHumidityProperty> ;
+		<http://www.w3.org/ns/sosa/phenomenonTime> <http://example.org/id/instant/2022-03-23T19:15:20> ;
+		<http://www.w3.org/ns/sosa/resultTime> "2022-03-23T19:15:20Z"^^<xsd:dateTime> .
+
+<http://example.org/id/observation/emse_fayol_4ET_401H_Temperature_2022-03-23T19:15:20>
+		a <https://coswot.gitlab.io/ontology#TemperatureObservation> ;
+		<http://www.w3.org/ns/sosa/hasSimpleResult> "13.36"^^<xsd:float> ;
+		<http://www.w3.org/ns/sosa/madeBySensor> <http://example.org/id/sensor/emse_fayol_4ET_401H_outside_Temperature> ;
+		<http://www.w3.org/ns/sosa/observedProperty> <http://example.org/id/property/emse_fayol_4ET_401H_sample1_ambientTemperatureProperty> ;
+		<http://www.w3.org/ns/sosa/phenomenonTime> <http://example.org/id/instant/2022-03-23T19:15:20> ;
+		<http://www.w3.org/ns/sosa/resultTime> "2022-03-23T19:15:20Z"^^<xsd:dateTime> .
+
+<http://example.org/id/observation/emse_fayol_4ET_404_Temperature_2022-03-23T19:15:20>
+		a <https://coswot.gitlab.io/ontology#TemperatureObservation> ;
+		<http://www.w3.org/ns/sosa/hasSimpleResult> "13.36"^^<xsd:float> ;
+		<http://www.w3.org/ns/sosa/madeBySensor> <http://example.org/id/sensor/emse_fayol_4ET_404_outside_Temperature> ;
+		<http://www.w3.org/ns/sosa/observedProperty> <http://example.org/id/property/emse_fayol_4ET_404_sample1_ambientTemperatureProperty> ;
+		<http://www.w3.org/ns/sosa/phenomenonTime> <http://example.org/id/instant/2022-03-23T19:15:20> ;
+		<http://www.w3.org/ns/sosa/resultTime> "2022-03-23T19:15:20Z"^^<xsd:dateTime> .
+
+<http://example.org/id/observation/emse_fayol_4ET_406_Luminosity_2022-03-23T19:15:20>
+		a <https://coswot.gitlab.io/ontology#LuminosityObservation> ;
+		<http://www.w3.org/ns/sosa/hasSimpleResult> "13.36"^^<xsd:float> ;
+		<http://www.w3.org/ns/sosa/madeBySensor> <http://example.org/id/sensor/emse_fayol_4ET_406_outside_Luminosity> ;
+		<http://www.w3.org/ns/sosa/observedProperty> <http://example.org/id/property/emse_fayol_4ET_406_sample1_luminosityProperty> ;
+		<http://www.w3.org/ns/sosa/phenomenonTime> <http://example.org/id/instant/2022-03-23T19:15:20> ;
+		<http://www.w3.org/ns/sosa/resultTime> "2022-03-23T19:15:20Z"^^<xsd:dateTime> .
+
+<http://example.org/id/observation/emse_fayol_4ET_407_Humidity_2022-03-23T19:15:20>
+		a <https://coswot.gitlab.io/ontology#HumidityObservation> ;
+		<http://www.w3.org/ns/sosa/hasSimpleResult> "13.36"^^<xsd:float> ;
+		<http://www.w3.org/ns/sosa/madeBySensor> <http://example.org/id/sensor/emse_fayol_4ET_407_outside_Humidity> ;
+		<http://www.w3.org/ns/sosa/observedProperty> <http://example.org/id/property/emse_fayol_4ET_407_sample1_relativeHumidityProperty> ;
+		<http://www.w3.org/ns/sosa/phenomenonTime> <http://example.org/id/instant/2022-03-23T19:15:20> ;
+		<http://www.w3.org/ns/sosa/resultTime> "2022-03-23T19:15:20Z"^^<xsd:dateTime> .
+
+<http://example.org/id/observation/emse_fayol_4ET_409_Temperature_2022-03-23T19:15:20>
+		a <https://coswot.gitlab.io/ontology#TemperatureObservation> ;
+		<http://www.w3.org/ns/sosa/hasSimpleResult> "13.36"^^<xsd:float> ;
+		<http://www.w3.org/ns/sosa/madeBySensor> <http://example.org/id/sensor/emse_fayol_4ET_409_outside_Temperature> ;
+		<http://www.w3.org/ns/sosa/observedProperty> <http://example.org/id/property/emse_fayol_4ET_409_sample1_ambientTemperatureProperty> ;
+		<http://www.w3.org/ns/sosa/phenomenonTime> <http://example.org/id/instant/2022-03-23T19:15:20> ;
+		<http://www.w3.org/ns/sosa/resultTime> "2022-03-23T19:15:20Z"^^<xsd:dateTime> .
+
+<http://example.org/id/observation/emse_fayol_4ET_411_Temperature_2022-03-23T19:15:20>
+		a <https://coswot.gitlab.io/ontology#TemperatureObservation> ;
+		<http://www.w3.org/ns/sosa/hasSimpleResult> "13.36"^^<xsd:float> ;
+		<http://www.w3.org/ns/sosa/madeBySensor> <http://example.org/id/sensor/emse_fayol_4ET_411_outside_Temperature> ;
+		<http://www.w3.org/ns/sosa/observedProperty> <http://example.org/id/property/emse_fayol_4ET_411_sample1_ambientTemperatureProperty> ;
+		<http://www.w3.org/ns/sosa/phenomenonTime> <http://example.org/id/instant/2022-03-23T19:15:20> ;
+		<http://www.w3.org/ns/sosa/resultTime> "2022-03-23T19:15:20Z"^^<xsd:dateTime> .
+
+<http://example.org/id/observation/emse_fayol_4ET_414_Temperature_2022-03-23T19:15:20>
+		a <https://coswot.gitlab.io/ontology#TemperatureObservation> ;
+		<http://www.w3.org/ns/sosa/hasSimpleResult> "13.36"^^<xsd:float> ;
+		<http://www.w3.org/ns/sosa/madeBySensor> <http://example.org/id/sensor/emse_fayol_4ET_414_outside_Temperature> ;
+		<http://www.w3.org/ns/sosa/observedProperty> <http://example.org/id/property/emse_fayol_4ET_414_sample1_ambientTemperatureProperty> ;
+		<http://www.w3.org/ns/sosa/phenomenonTime> <http://example.org/id/instant/2022-03-23T19:15:20> ;
+		<http://www.w3.org/ns/sosa/resultTime> "2022-03-23T19:15:20Z"^^<xsd:dateTime> .
+
+<http://example.org/id/observation/emse_fayol_4ET_418_Temperature_2022-03-23T19:15:20>
+		a <https://coswot.gitlab.io/ontology#TemperatureObservation> ;
+		<http://www.w3.org/ns/sosa/hasSimpleResult> "13.36"^^<xsd:float> ;
+		<http://www.w3.org/ns/sosa/madeBySensor> <http://example.org/id/sensor/emse_fayol_4ET_418_outside_Temperature> ;
+		<http://www.w3.org/ns/sosa/observedProperty> <http://example.org/id/property/emse_fayol_4ET_418_sample1_ambientTemperatureProperty> ;
+		<http://www.w3.org/ns/sosa/phenomenonTime> <http://example.org/id/instant/2022-03-23T19:15:20> ;
+		<http://www.w3.org/ns/sosa/resultTime> "2022-03-23T19:15:20Z"^^<xsd:dateTime> .
+
+ }
+		

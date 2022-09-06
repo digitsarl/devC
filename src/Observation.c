@@ -59,26 +59,26 @@ Observation* readFromStream(char* stream)
     
 
     // Create a static table to store the stream
-    int lenStream = strlen(stream);
+    int lenStream = strlen(stream)+1;
     char stream2[lenStream];
-    for(int k=0;k<lenStream;k++)
+    for(int k=0;k<lenStream-1;k++)
     {
         stream2[k] = stream[k];
     }
 
-    // Create a matrix of char to store trhe differents tokens of stream
+    // Create a matrix of char to store the differents tokens of stream
     char ** matObser = malloc(15 * sizeof(char *));
     int i,j;
 
    // Extract the first token
-   char * token = strtok(stream2, "/");
+   char * token = strtok(stream2, "-");
    
 
    // Store the first token
    matObser[0] = token;
 
    //Extract and store others tokens
-   token = strtok(NULL, "/");
+   token = strtok(NULL, "-");
    matObser[1] = token;
    token = strtok(NULL, " ");
    matObser[2] = token;

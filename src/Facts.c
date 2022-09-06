@@ -30,6 +30,9 @@ void AddFactWithLiteralObject(SordModel* mod, char* s, char* p, char* o, char* g
     SordNode* predicate = sord_new_uri(world, (const uint8_t*)p);
 
     SordNode* datatypeNode = sord_new_uri(world, (const uint8_t*)datatype);
+    //SordNode* datatypeNode = NULL;
+    //SordNode* datatypeNode = createSordNodeLiteral(datatype,mod);
+    char lang[] = "float";
     SordNode* object = sord_new_literal(world, datatypeNode, (const uint8_t*)o, NULL);
 
     SordNode* graph = sord_new_uri(world, (const uint8_t*)g);
@@ -250,9 +253,18 @@ void makeFileFacts(char* filepath, SordModel* mod)
             sord_iter_get(tempFacts, quad);
 
             SordNode* datatype = sord_node_get_datatype(quad[2]);
-
-            serd_writer_write_statement(writer, 0, sord_node_to_serd_node(quad[3]), sord_node_to_serd_node(quad[0]), sord_node_to_serd_node(quad[1]), sord_node_to_serd_node(quad[2]), sord_node_to_serd_node(datatype), NULL);
+            const char* language = sord_node_get_language(quad[2]);
+            /*printf("%s\n",language);
+            char* langua = calloc((strlen((char*)language)+1),sizeof(char));
+            strcpy(langua,language);*/
+            SordNode* lang = NULL ;
+            if(language)
+            {
+                lang = createSordNodeLiteral((char*)language,mod);
+            }
+            serd_writer_write_statement(writer, 0, sord_node_to_serd_node(quad[3]), sord_node_to_serd_node(quad[0]), sord_node_to_serd_node(quad[1]), sord_node_to_serd_node(quad[2]), sord_node_to_serd_node(datatype),sord_node_to_serd_node(lang));
             sord_iter_next(tempFacts);
+
         }
         serd_writer_finish(writer);
 
@@ -324,7 +336,7 @@ void readFileOfFacts(char* initialFactFilePath)
                 fclose(file);
                 serd_env_free(env);
                 serd_reader_free(reader);
-                printf("-----> %zu facts read in the file facts.ttl.\n", sord_num_quads(kb));
+                printf("-----> %zu facts read in the file %s.\n", sord_num_quads(kb), initialFactFilePath);
             }
             else
             {
