@@ -9,8 +9,6 @@ int main(int argc, char **argv)
     //Create a SordModel object
     SordModel* kb = sord_new(world, SORD_SPO, true);
 
-    //Create the filepath to read the differents stream of observations
-    //char filepathRead[] = "data/observations.txt";
     
     // Storage of all observations in a LinkedList
     LinkedList* l = readFromFile(argv[1]);
@@ -24,14 +22,10 @@ int main(int argc, char **argv)
     //print the facts
     //printFact(kb);
 
-    //Create the filepath to write the differents facts extracts from a model (sordModel)
-    //char filepathWrite[] = "data/facts.ttl";
-
     //write the facts to a file
     makeFileFacts(argv[2], kb);
 
-    //reads and counts the number of facts contained in a file
-    //char factFilePath[20] = "data/facts.ttl";
+    //reads and counts the number of facts contained in a exit file
     readFileOfFacts(argv[2]);
 
     //Free the LinkedList
