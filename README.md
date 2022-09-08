@@ -21,20 +21,24 @@ FactGenerator is a s-p-o-g facts generator (s for subject, p for predicate, o fo
  10. The ```.gitmodules``` file
  
  
-## Allowed format of input files
+## Allowed formats of input files
 
 The lines of the input files must respect one of the following formats :
 
  - ```year/month/day hour:minute:second emse/fayol/stair/room/sensors/sensorID/metrics/sensorType ObservedValue``` for a principal observation
+ 
  Example ```2022/03/23 19:14:16 emse/fayol/e4/S405/sensors/6bd134b6-339c-4168-9aeb-ae7d0f236851/metrics/TEMP 27.37```
  
  - ```year-month-day hour:minute:second emse/fayol/stair/room/sensors/sensorID/metrics/sensorType ObservedValue``` for a principal observation
+ 
  Example ```2022-03-23 19:14:16 emse/fayol/e4/S405/sensors/6bd134b6-339c-4168-9aeb-ae7d0f236851/metrics/TEMP 27.37```
  
  - ```year/month/day hour:minute:second emse/fayol/stair/room/sensorType/outside ObservedValue``` for an external observation
+ 
  Example: ```2022/03/23 19:15:20 emse/fayol/4ET/409/TEMP/outside 13.36``` 
  
  - ```year-month-day hour:minute:second emse/fayol/stair/room/sensorType/outside ObservedValue``` for an external observation
+ 
  Example: ```2022-03-23 19:15:20 emse/fayol/4ET/409/TEMP/outside 13.36``` 
 
 
