@@ -142,6 +142,11 @@ char* getTimesAttr(Observation* obs);
  */
 char* getAttr(Observation* obs);
 
+/**
+ * get the sensorID attribute (as a string) from an observation.
+ */
+char* getSensorID(Observation* obs);
+
 
 
 

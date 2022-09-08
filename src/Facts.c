@@ -254,9 +254,7 @@ void makeFileFacts(char* filepath, SordModel* mod)
 
             SordNode* datatype = sord_node_get_datatype(quad[2]);
             const char* language = sord_node_get_language(quad[2]);
-            /*printf("%s\n",language);
-            char* langua = calloc((strlen((char*)language)+1),sizeof(char));
-            strcpy(langua,language);*/
+            
             SordNode* lang = NULL ;
             if(language)
             {

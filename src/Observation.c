@@ -68,18 +68,34 @@ Observation* readFromStream(char* stream)
 
     // Create a matrix of char to store the differents tokens of stream
     char ** matObser = malloc(15 * sizeof(char *));
+    char * token = NULL;
     int i,j;
 
    // Extract the first token
-   char * token = strtok(stream2, "-");
+   if(stream2[4] == '-')
+   {
+        token = strtok(stream2, "-");
+   }
+   else if (stream2[4] == '/')
+   {
+        token = strtok(stream2, "/");
+   }
    
-
    // Store the first token
    matObser[0] = token;
 
    //Extract and store others tokens
-   token = strtok(NULL, "-");
+   if(stream2[7] == '-')
+   {
+        token = strtok(NULL, "-");
+   }
+   else if (stream2[7] == '/')
+   {
+        token = strtok(NULL, "/");
+   }
+
    matObser[1] = token;
+
    token = strtok(NULL, " ");
    matObser[2] = token;
    for( i=3; i<=4;i++)
@@ -468,7 +484,6 @@ char* getObjectOther(Observation* obs)
     char sensorType1[20] = "Luminosity";
     char sensorType2[20] = "Temperature";
     char sensorType3[20] = "Humidity";
-    char outside[] = "outside";
     char* buidingStairRoom = getAttr(obs);
 
     char* elem = malloc(1 * sizeof(char));
@@ -479,15 +494,8 @@ char* getObjectOther(Observation* obs)
     res = concatString(init,buidingStairRoom,elem);
 
     elem[0] = '_';
-    if(obs->sensorID)
-    {
-        res = concatString(res,obs->sensorID,elem);
-    }
-    else
-    {
-        res = concatString(res,outside,elem);
-    }
-
+    res = concatString(res, getSensorID(obs) , elem);
+    
     elem[0] = '_';
     if( *(obs->sensorType) == 0 )
     {
@@ -566,6 +574,22 @@ char* getAttr(Observation* obs)
     res = concatString(res,obs->room,elem);
 
     return res;
+}
+
+char* getSensorID(Observation* obs)
+{
+    // example : 405_6bd134b6-339c-4168-9aeb-ae7d0f236851 or outside
+    char* outside = calloc(12,sizeof(char)); 
+    strcpy(outside, "outside");
+
+    if(obs->sensorID)
+    {
+        return obs->sensorID;
+    }
+    else
+    {
+        return outside;
+    }
 }
 
 char* getObjectObservedValue(Observation* obs)
