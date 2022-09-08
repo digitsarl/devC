@@ -23,7 +23,7 @@ FactGenerator is a s-p-o-g facts generator (s for subject, p for predicate, o fo
  
 ## Allowed formats of input files
 
-The lines of the input files must respect one of the following formats :
+The lines of the input files must respect at least one of the following formats:
 
  - ```year/month/day hour:minute:second emse/fayol/stair/room/sensors/sensorID/metrics/sensorType ObservedValue``` for a principal observation
  
